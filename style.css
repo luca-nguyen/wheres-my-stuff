@@ -110,10 +110,12 @@ body {
   fill: white;
 }
 .bookmarks__container {
+  font-size: 18px;
   display: flex;
   flex-direction: row;
   gap: 10px;
   cursor: pointer;
+  margin-right: 60px;
 }
 .bookmarks__icon {
   width: 35px;

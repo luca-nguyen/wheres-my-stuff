@@ -77,7 +77,7 @@ class App {
     this.searchbar.addEventListener("input", (e) => {
       if (this.searchbar.value === "") {
         sessionStorage.setItem("shouldFocusSearchbar", "true"); // Set a flag to focus the search bar after reload
-        this.logoClick(e); // Refresh the app (same as clicking the logo)
+        window.location.reload();
       }
     });
     // After reload
@@ -102,6 +102,32 @@ class App {
     this.showForm();
     this.doneBtn.addEventListener("click", () => {
       console.log("hi");
+
+      const name = this.nameInput.value;
+      const location = this.locationInput.value;
+      const notes = this.notesInput.value;
+
+      this.handleFormSubmit(e);
+      console.log(this.currItems);
+      console.log(this.currInformationDisplay);
+
+      this.currItems.forEach(item => console.log(item.icon));
+      console.log(this.currInformationDisplay.url);
+
+      const iconEdit = this.currInformationDisplay.url.slice(0, -6);
+      const white = "FFFFFF";
+      const url = iconEdit.concat(white);
+
+      // Deleting original item
+      this.currItems = this.currItems.filter(
+        (item) => item.name !== this.currInformationDisplay.name || item.location !== this.currInformationDisplay.location || item.notes !== this.currInformationDisplay.notes || item.icon !== url
+      );
+      this.saveItemsToStorage();
+
+    
+      this.logoClick(e);
+
+
     });
   }
 
@@ -174,6 +200,7 @@ class App {
       url,
       location,
       notes,
+      id: Date.now(),
     };
 
     this.currInformationDisplay = information;

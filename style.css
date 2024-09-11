@@ -7,9 +7,9 @@
 
 html {
   /* overflow: hidden; */
-    height: 100%;
-  background-image: linear-gradient(45deg, #141e30, #243b55);
+  height: 100%;
   background-size: cover;
+  background-image: linear-gradient(45deg, #141e30, #243b55);
 }
 body {
   /* overflow: auto;
@@ -28,6 +28,7 @@ body {
   grid-template-rows: 1fr 4fr 1fr;
   border-radius: 25px;
   box-shadow: 0px 0px 40px rgb(116, 116, 116);
+  position: relative;
 }
 .header {
   width: 95%;
@@ -80,7 +81,7 @@ body {
 }
 .search__button {
   width: 150px;
-  padding: 8px 20px;
+  padding: 8px 15px;
   position: absolute;
   right: 0px;
   bottom: -0px;
@@ -94,6 +95,7 @@ body {
   flex-direction: row;
   align-items: center;
   gap: 15px;
+  height: 100%;
   transition: ease 0.3s;
 }
 .search__button:hover {
@@ -111,12 +113,10 @@ body {
   flex-direction: row;
   gap: 10px;
   cursor: pointer;
-
 }
 .bookmarks__icon {
   width: 35px;
   height: 35px;
-
 }
 
 .item__list {
@@ -183,6 +183,7 @@ body {
 .item__information {
   align-self: center;
   justify-self: center;
+  position: relative;
 }
 
 .img__container {
@@ -242,7 +243,7 @@ iconify-icon {
 
 form {
   color: white;
-  width: 50%;
+  width: 60%;
   height: 400px;
   align-self: center;
   justify-self: center;
@@ -254,13 +255,16 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 2fr 2fr 2fr;
-  box-shadow: 0px 0px 50px rgb(80, 80, 80); 
+  box-shadow: 0px 0px 50px rgb(80, 80, 80);
   animation: fadeIn 0.3s;
-
 }
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .form__title {
@@ -346,7 +350,7 @@ form {
 }
 .name__icon {
   width: 25px;
-  height: 25px;
+  height: 20px;
 }
 .notes__input {
   width: 350px;
@@ -420,7 +424,7 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-  
+
   overflow-y: scroll;
 }
 .suggested__icon {
@@ -456,11 +460,10 @@ form {
   }
 }
 .spinner__mini {
-    width: 25px;
-    height: 25px;
-    animation: rotate 2s infinite linear;
+  width: 25px;
+  height: 25px;
+  animation: rotate 2s infinite linear;
 }
-
 
 .author {
   align-self: center;
@@ -469,20 +472,20 @@ form {
 }
 .overlay {
   z-index: 1;
-  height: 900px;
-  width: 2000px;
-  align-self: center;
-  justify-self: center;
+  /* align-self: center;
+  justify-self: center; */
   background-color: #000000d5;
-  position: absolute;
   animation: fadeIn 0.3s;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  top: 0;
+  left: 0;
 }
-
-
 
 /* Information */
 .item__information {
- 
   height: 400px;
   width: 800px;
   align-self: center;
@@ -524,7 +527,7 @@ form {
 
 /* Bookmarks  */
 .bookmarks__icon {
-  background: url('https://api.iconify.design/material-symbols/bookmark-outline.svg?color=%23000000');
+  background: url("https://api.iconify.design/material-symbols/bookmark-outline.svg?color=%23000000");
   background-repeat: no-repeat;
   background-size: contain; /* Ensure the background scales */
   width: 25px;
@@ -533,24 +536,22 @@ form {
   justify-self: center;
   align-self: center;
 }
-.bookmarks__icon:hover, .bookmarks__container:hover .bookmarks__icon {
-  background: url('https://api.iconify.design/material-symbols/bookmark.svg?color=%23000000');
+.bookmarks__icon:hover,
+.bookmarks__container:hover .bookmarks__icon {
+  background: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%23000000");
   background-repeat: no-repeat;
   background-size: contain; /* Scale the hover icon */
   cursor: pointer;
 }
 
-
-
-
 /* Reset Button */
 .reset__btn {
   padding: 10px 10px;
   position: absolute;
-  right: 230px;
+  right: 50px;
   bottom: 30px;
   border: none;
-  background-color: #ED213A; /* Use background-color */
+  background-color: #ed213a; /* Use background-color */
   border-radius: 50%;
   transition: 0.3s ease; /* Transition for background-color */
 }
@@ -574,15 +575,13 @@ form {
 .delete__icon {
   width: 25px;
   height: 25px;
-  fill:rgb(125, 125, 125);
+  fill: rgb(125, 125, 125);
   transition: ease 0.3s;
-
 }
 .delete__icon:hover {
-  fill:#ED213A;
+  fill: #ed213a;
   cursor: pointer;
 }
-
 
 .middle {
   text-align: center;
@@ -614,7 +613,6 @@ form {
   justify-content: center;
 }
 
-
 /* Edit */
 .edit__btn {
   position: absolute;
@@ -622,8 +620,8 @@ form {
   height: 40px;
   border: none;
   background-color: transparent;
-  right: 280px;
-  top: 250px;
+  right: 30px;
+  top: 30px;
 }
 .edit__icon {
   width: 30px;

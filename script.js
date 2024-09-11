@@ -24,7 +24,7 @@ class App {
     this.resetBtn = document.querySelector(".reset__btn");
     this.deleteBtn = document.querySelector(".delete__btn");
     this.logoContainer = document.querySelector(".logo__container");
-    this.editBtn = document.querySelector('.edit__btn');
+    this.editBtn = document.querySelector(".edit__btn");
 
     this.currInformationDisplay;
     this.currIconPicked = null;
@@ -37,7 +37,10 @@ class App {
 
   initEventListeners() {
     this.searchBtn.addEventListener("click", (e) => this.searchItems(e));
-    this.addItem.addEventListener("click", () => this.showForm());
+    this.addItem.addEventListener("click", () => {
+      this.clearFormInput();
+      this.showForm();
+    });
     this.closeFormBtn.addEventListener("click", () => this.hideForm());
     this.closeEmojiBtn.addEventListener("click", () =>
       this.toggleEmojiContainer()
@@ -84,23 +87,22 @@ class App {
         sessionStorage.removeItem("shouldFocusSearchbar"); // Clean up the flag
       }
     });
-    this.itemInformation.addEventListener('click', (e) => this.editItem(e));
+    this.itemInformation.addEventListener("click", (e) => this.editItem(e));
   }
 
   editItem(e) {
     e.preventDefault();
-    const btn = e.target.closest('.edit__btn');
+    const btn = e.target.closest(".edit__btn");
     if (!btn) return;
 
-    console.log('yay');
+    console.log("yay");
     this.nameInput.value = this.currInformationDisplay.name;
     this.locationInput.value = this.currInformationDisplay.location;
     this.notesInput.value = this.currInformationDisplay.notes;
     this.showForm();
-    this.doneBtn.addEventListener('click', () => {
-      
-      console.log('hi');
-    })
+    this.doneBtn.addEventListener("click", () => {
+      console.log("hi");
+    });
   }
 
   logoClick(e) {
@@ -435,6 +437,13 @@ class App {
       localStorage.clear();
       window.location.reload();
     }
+  }
+
+  clearFormInput() {
+    // Clear input
+    this.nameInput.value = "";
+    this.locationInput.value = "";
+    this.notesInput.value = "";
   }
 }
 

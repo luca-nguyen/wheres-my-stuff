@@ -25,6 +25,9 @@ class App {
     this.deleteBtn = document.querySelector(".delete__btn");
     this.logoContainer = document.querySelector(".logo__container");
     this.editBtn = document.querySelector(".edit__btn");
+    this.bookmarksContainer = document.querySelector('.bookmarks__container');
+    this.bookmarksDisplay = document.querySelector('.bookmarks__display');
+    this.mark = document.querySelector('.mark');
 
     this.currInformationDisplay;
     this.currIconPicked = null;
@@ -36,6 +39,7 @@ class App {
   }
 
   initEventListeners() {
+    this.mark.addEventListener('mouseover', () => this.displayBookmarks());
     this.searchBtn.addEventListener("click", (e) => this.searchItems(e));
     this.addItem.addEventListener("click", () => {
       this.clearFormInput();
@@ -65,6 +69,7 @@ class App {
     // this.resetBtn.addEventListener('click', this.resetItems());
     window.addEventListener("load", () => this.loadItemsFromStorage());
     window.addEventListener("load", () => this.loadInformationFromStorage());
+    window.addEventListener("load", () => this.loadCurrIconFromStorage());
     this.resetBtn.addEventListener("click", () => this.resetItems());
     this.itemList.addEventListener("click", (e) => this.deleteItem(e));
     this.logoContainer.addEventListener("click", (e) => this.logoClick(e));
@@ -88,6 +93,23 @@ class App {
       }
     });
     this.itemInformation.addEventListener("click", (e) => this.editItem(e));
+    this.bookmarksContainer.addEventListener('mouseover', () => this.displayBookmarks());
+    this.bookmarksDisplay.addEventListener('mouseout', () => this.hideBookmarks());
+  }
+
+  displayBookmarks() {
+    this.bookmarksDisplay.classList.remove('hidden');
+    this.bookmarksDisplay.classList.add('flex');
+  }
+  hideBookmarks() {
+    setTimeout(() => {
+     
+     this.bookmarksDisplay.classList.remove("flex");
+      this.bookmarksDisplay.classList.add("hidden");
+    }, 800); // Duration matches the fadeOut animation time (0.3s)
+
+    // this.bookmarksDisplay.classList.add("hidden");
+    
   }
 
   editItem(e) {
@@ -100,34 +122,34 @@ class App {
     this.locationInput.value = this.currInformationDisplay.location;
     this.notesInput.value = this.currInformationDisplay.notes;
     this.showForm();
+    this.currIconPicked = this.currInformationDisplay.url
+      .slice(0, -6)
+      .concat('FFFFFF');
     this.doneBtn.addEventListener("click", () => {
       console.log("hi");
 
-      const name = this.nameInput.value;
-      const location = this.locationInput.value;
-      const notes = this.notesInput.value;
-
       this.handleFormSubmit(e);
-      console.log(this.currItems);
-      console.log(this.currInformationDisplay);
+      // console.log(this.currItems);
+      // console.log(this.currInformationDisplay);
 
-      this.currItems.forEach(item => console.log(item.icon));
-      console.log(this.currInformationDisplay.url);
+      this.currItems.forEach((item) => console.log(item.icon));
+      // console.log(this.currInformationDisplay.url);
 
       const iconEdit = this.currInformationDisplay.url.slice(0, -6);
       const white = "FFFFFF";
       const url = iconEdit.concat(white);
-
+      
       // Deleting original item
       this.currItems = this.currItems.filter(
-        (item) => item.name !== this.currInformationDisplay.name || item.location !== this.currInformationDisplay.location || item.notes !== this.currInformationDisplay.notes || item.icon !== url
+        (item) =>
+          item.name !== this.currInformationDisplay.name ||
+          item.location !== this.currInformationDisplay.location ||
+          item.notes !== this.currInformationDisplay.notes ||
+          item.icon !== url
       );
       this.saveItemsToStorage();
 
-    
       this.logoClick(e);
-
-
     });
   }
 
@@ -174,6 +196,11 @@ class App {
     const query = this.searchbar.value;
     const queryLowercase = query.toLowerCase();
     this.itemList.innerHTML = "";
+
+    const queryCategory = this.currItems.filter(
+      (item) => item.location.toLowerCase() == queryLowercase
+    );
+    queryCategory.forEach((item) => this.renderItem(item));
 
     const queryItems = this.currItems.filter(
       (item) => item.name.toLowerCase() == queryLowercase
@@ -455,6 +482,17 @@ class App {
         return;
       }
       this.displayInformation(this.currInformationDisplay);
+    }
+  }
+
+  saveCurrIconToStorage() {
+    localStorage.setItem("icon", JSON.stringify(this.currIconPicked));
+  }
+
+  loadCurrIconFromStorage() {
+    const savedIcon = localStorage.getItem("icon");
+    if (savedIcon) {
+      this.currIconPicked = JSON.parse(savedIcon);
     }
   }
 

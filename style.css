@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   font-family: "Work Sans";
+  transition: ease 0.3s;
 }
 
 html {
@@ -526,22 +527,48 @@ form {
 }
 
 /* Bookmarks  */
+/* Bookmarks */
 .bookmarks__icon {
-  background: url("https://api.iconify.design/material-symbols/bookmark-outline.svg?color=%23000000");
-  background-repeat: no-repeat;
-  background-size: contain; /* Ensure the background scales */
   width: 25px;
   height: 25px;
-  transition: ease 0.3s;
+  background-repeat: no-repeat;
+  background-size: contain; /* Ensure the background scales */
   justify-self: center;
   align-self: center;
+  position: absolute;
+  transition: opacity 0.3s ease; /* Add transition here */
+  right: 30px;
 }
-.bookmarks__icon:hover,
-.bookmarks__container:hover .bookmarks__icon {
-  background: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%23000000");
+
+.bookmarks__icon--outline {
+  width: 25px;
+  height: 25px;
+  background: url("https://api.iconify.design/material-symbols/bookmark-outline.svg?color=%23000000");
+  background-size: 20px;
+
   background-repeat: no-repeat;
-  background-size: contain; /* Scale the hover icon */
-  cursor: pointer;
+  opacity: 1;
+}
+
+.bookmarks__icon--filled {
+  background: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%23000000");
+  background-size: 20px;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+
+.bookmarks__container:hover .bookmarks__icon--outline {
+  opacity: 0;
+}
+
+.bookmarks__container:hover .bookmarks__icon--filled {
+  opacity: 1;
+}
+
+.bookmarks__container {
+  position: relative;
+  width: 25px;
+  height: 25px;
 }
 
 /* Reset Button */

@@ -36,6 +36,7 @@ class App {
 
     // Binding event listeners to class
     this.initEventListeners();
+    this.setupBookmarksStyles();
   }
 
   initEventListeners() {
@@ -93,23 +94,41 @@ class App {
       }
     });
     this.itemInformation.addEventListener("click", (e) => this.editItem(e));
-    this.bookmarksContainer.addEventListener('mouseover', () => this.displayBookmarks());
-    this.bookmarksDisplay.addEventListener('mouseout', () => this.hideBookmarks());
+    this.bookmarksContainer.addEventListener('mouseenter', () => this.displayBookmarks());
+    this.bookmarksDisplay.addEventListener('mouseleave', () => this.hideBookmarks());
+  }
+
+  // displayBookmarks() {
+  //   this.bookmarksDisplay.classList.remove('hidden');
+  //   this.bookmarksDisplay.classList.add('flex');
+  // }
+  // hideBookmarks() {
+  //   setTimeout(() => {
+  //    this.bookmarksDisplay.classList.remove("flex");
+  //     this.bookmarksDisplay.classList.add("hidden");
+  //   }, 1000); // Duration matches the fadeOut animation time (0.3s)
+  //   // this.bookmarksDisplay.classList.add("hidden"); 
+  // }
+
+  setupBookmarksStyles() {
+    // Add these styles to your bookmarks display element
+    this.bookmarksDisplay.classList.add('hidden');
+    this.bookmarksDisplay.style.transition = 'opacity 0.3s ease-out';
+    this.bookmarksDisplay.style.opacity = '0';
+    this.bookmarksDisplay.style.pointerEvents = 'none';
   }
 
   displayBookmarks() {
-    this.bookmarksDisplay.classList.remove('hidden');
+    this.bookmarksDisplay.style.opacity = '1';
     this.bookmarksDisplay.classList.add('flex');
+    this.bookmarksDisplay.style.pointerEvents = 'auto';
   }
-  hideBookmarks() {
-    setTimeout(() => {
-     
-     this.bookmarksDisplay.classList.remove("flex");
-      this.bookmarksDisplay.classList.add("hidden");
-    }, 800); // Duration matches the fadeOut animation time (0.3s)
 
-    // this.bookmarksDisplay.classList.add("hidden");
+  hideBookmarks() {
+    this.bookmarksDisplay.style.opacity = '0';
     
+    this.bookmarksDisplay.style.pointerEvents = 'none';
+
   }
 
   editItem(e) {

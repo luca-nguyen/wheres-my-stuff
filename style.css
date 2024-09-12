@@ -578,9 +578,10 @@ form {
 .bookmarks__display {
   z-index: 100;
   width: 400px;
-  height: 200px;
+  /* height: 150px; */
+  max-height: 400px;
   position: absolute;
-  background-color: #bac4cf;
+  background-color: #ffffff;
   right: 0;
   top: 100px;
   /* display: flex; */

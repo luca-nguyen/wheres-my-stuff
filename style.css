@@ -146,7 +146,7 @@ body {
   grid-template-columns: 1fr 3fr;
   grid-template-rows: 1fr 1fr;
   border-radius: 25px;
-  box-shadow: 0px 0px 20px 5px rgb(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 20px 5px rgb(0, 0, 0, 0.2);
   transition: ease 0.3s;
   position: relative;
 }
@@ -607,6 +607,23 @@ form {
   background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");
   opacity: 1; 
 }
+.bookmark__solid {
+  z-index: 100;
+  width: 35px;
+  height: 35px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  justify-self: center;
+  align-self: center;
+  position: absolute;
+  left: 60px;
+  top: 35px;   
+  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF"); 
+}
+.bookmark__solid:hover {
+  cursor: pointer;
+}
+
 /* .bookmark__marked {
   background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");                                            
   opacity: 1;

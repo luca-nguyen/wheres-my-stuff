@@ -33,11 +33,16 @@ class App {
     this.bookmarkIconFilled = document.querySelector(
       ".bookmarks__icon--filled"
     );
+    this.bookmarkIconOutline = document.querySelector(
+      ".bookmarks__icon--outline"
+    );
 
     this.currInformationDisplay;
     this.currIconPicked = null;
     this.currIcons = [];
     this.currItems = [];
+    this.currBookmarked = [];
+    this.isBookmarked = false;
 
     // Binding event listeners to class
     this.initEventListeners();
@@ -72,13 +77,47 @@ class App {
     document.addEventListener("keydown", (e) => this.escapeWindow(e));
 
     this.itemList.addEventListener("click", (e) => this.renderInformation(e));
-    // ! TODO
+
+    // Bookmark Item
     this.itemInformation.addEventListener("click", (e) => {
       const btn = e.target.closest(".bookmark__btn");
-      if (!btn) return;
-      const bookmark = e.target.closest(".bookmark");
-      console.log(window.getComputedStyle(bookmark).opacity);
+      const solid = e.target.closest(".bookmark__solid");
+      console.log(solid);
 
+      // Creating a new bookmark
+      if (!solid && btn) {
+        btn.classList.add("hidden");
+        const html = `<div class="bookmark__solid"></div>`;
+        this.itemInformation.insertAdjacentHTML("beforeend", html);
+        const target = this.currItems.find(
+          (item) => item.name === this.currInformationDisplay.name
+        );
+        console.log("Target:");
+        console.log(target);
+        // ???
+        if (this.currBookmarked.includes(target)) return;
+        this.currBookmarked.push(target);
+        this.saveBookmarksToStorage();
+      } else if (solid) {
+        // Deleting a bookmark
+        const html = `<div class="bookmark__btn">
+            <div class="bookmark bookmarks__icon--outline"></div>
+            <div class="bookmark bookmarks__icon--filled mark"></div>
+          </div>`;
+        const target = this.currItems.find(
+          (item) => item.name === this.currInformationDisplay.name
+        );
+        this.currBookmarked = this.currBookmarked.filter(
+          (item) => item.name !== target.name
+        );
+        this.saveBookmarksToStorage();
+        this.itemInformation.insertAdjacentHTML("beforeend", html);
+        solid.remove();
+
+        // Remove the unbookmarked item from the bookmarks display
+        this.removeBookmarkFromDisplay(target.name);
+      }
+      if (!btn) return;
       const name = this.currInformationDisplay.name;
       const target = this.currItems.find((item) => item.name === name);
       this.renderBookmarkItem(target);
@@ -93,9 +132,11 @@ class App {
     );
     this.doneBtn.addEventListener("click", (e) => this.handleFormSubmit(e));
     // this.resetBtn.addEventListener('click', this.resetItems());
+    window.addEventListener("load", () => this.loadCurrBookmarksFromStorage());
     window.addEventListener("load", () => this.loadItemsFromStorage());
     window.addEventListener("load", () => this.loadInformationFromStorage());
     window.addEventListener("load", () => this.loadCurrIconFromStorage());
+
     this.resetBtn.addEventListener("click", () => this.resetItems());
     this.itemList.addEventListener("click", (e) => this.deleteItem(e));
     this.logoContainer.addEventListener("click", (e) => this.logoClick(e));
@@ -138,6 +179,15 @@ class App {
   //   }, 1000); // Duration matches the fadeOut animation time (0.3s)
   //   // this.bookmarksDisplay.classList.add("hidden");
   // }
+  removeBookmarkFromDisplay(itemName) {
+    const bookmarkItems = this.bookmarksDisplay.querySelectorAll(".item");
+    bookmarkItems.forEach((item) => {
+      const nameElement = item.querySelector(".item__name");
+      if (nameElement && nameElement.textContent === itemName) {
+        item.remove();
+      }
+    });
+  }
 
   setupBookmarksStyles() {
     // Add these styles to your bookmarks display element
@@ -258,6 +308,8 @@ class App {
   // Rendering item information
   renderInformation(e) {
     const res = e.target.closest(".item");
+    // Resetting bookmarked fill
+    this.isBookmarked = false;
     console.log(res);
     if (!res) return;
     const name = res.querySelector(".item__name").textContent;
@@ -268,6 +320,14 @@ class App {
     const black = "000000";
     const url = iconEdit.concat(black);
     this.itemInformation.innerHTML = "";
+
+    this.currBookmarked.forEach((item) => {
+      if (item.name === name) {
+        this.isBookmarked = true;
+      }
+    });
+    console.log("FLAG");
+    console.log(this.isBookmarked);
 
     const information = {
       name,
@@ -299,6 +359,9 @@ class App {
   }
 
   displayInformation(item) {
+    const isBookmarked = this.currBookmarked.some(
+      (bookmark) => bookmark.name === item.name
+    );
     const html = `<div class="item__information--title">
             <h2>${item.name}</h2>
             <img
@@ -312,10 +375,14 @@ class App {
                                         <button class="edit__btn">
             <svg class="edit__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24";transform: ;msFilter:;"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>
           </button>
-          <div class="bookmark__btn">
+          ${
+            isBookmarked
+              ? `<div class="bookmark__solid"></div>`
+              : `<div class="bookmark__btn">
             <div class="bookmark bookmarks__icon--outline"></div>
             <div class="bookmark bookmarks__icon--filled mark"></div>
-          </div>
+          </div>`
+          }
         `;
 
     this.itemInformation.insertAdjacentHTML("afterbegin", html);
@@ -512,6 +579,10 @@ class App {
     localStorage.setItem("items", JSON.stringify(this.currItems));
   }
 
+  saveBookmarksToStorage() {
+    localStorage.setItem("bookmarks", JSON.stringify(this.currBookmarked));
+  }
+
   // Load items from local storage
   loadItemsFromStorage() {
     const savedItems = localStorage.getItem("items");
@@ -541,7 +612,19 @@ class App {
         this.itemInformation.insertAdjacentHTML("beforeend", html);
         return;
       }
+      console.log(this.currInformationDisplay);
+      console.log(this.currBookmarked);
       this.displayInformation(this.currInformationDisplay);
+    }
+  }
+
+  loadCurrBookmarksFromStorage() {
+    const savedBookmarks = localStorage.getItem("bookmarks");
+    if (savedBookmarks) {
+      this.currBookmarked = JSON.parse(savedBookmarks);
+      this.currBookmarked.forEach((item) => this.renderBookmarkItem(item));
+    } else {
+      this.currBookmarked = [];
     }
   }
 

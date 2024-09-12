@@ -543,7 +543,6 @@ form {
   transition: opacity 0.3s ease; /* Add transition here */
   right: 30px;
 }
-
 .bookmarks__icon--outline {
   width: 25px;
   height: 25px;
@@ -553,7 +552,6 @@ form {
   background-repeat: no-repeat;
   opacity: 1;
 }
-
 .bookmarks__icon--filled {
   background: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%23000000");
   background-size: 20px;
@@ -564,17 +562,61 @@ form {
 .bookmarks__container:hover .bookmarks__icon--outline {
   opacity: 0;
 }
-
 .bookmarks__container:hover .bookmarks__icon--filled {
   opacity: 1;
 }
+
+.bookmark__btn {
+  width: 35px;
+  height: 35px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  justify-self: center;
+  align-self: center;
+  position: absolute;
+  transition: opacity 0.3s ease;
+  left: 60px;
+  top: 35px;  
+}
+.bookmark__btn .bookmarks__icon--outline,
+.bookmark__btn .bookmarks__icon--filled {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: opacity 0.3s ease;
+}
+.bookmark__btn .bookmarks__icon--outline {
+  background-image: url("https://api.iconify.design/material-symbols/bookmark-outline.svg?color=%23767676");
+  opacity: 1;
+}
+.bookmark__btn .bookmarks__icon--filled {
+  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%23767676");                                            
+  opacity: 0;
+}
+.bookmark__btn:hover .bookmarks__icon--outline {
+  cursor: pointer;
+  opacity: 0;
+}
+.bookmark__btn:hover .bookmarks__icon--filled {
+  cursor: pointer;
+  opacity: 1;
+}
+.bookmark__marked {
+  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");
+  opacity: 1; 
+}
+/* .bookmark__marked {
+  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");                                            
+  opacity: 1;
+} */
 
 .bookmarks__container {
   position: relative;
   width: 25px;
   height: 25px;
 }
-
 .bookmarks__display {
   z-index: 100;
   width: 400px;
@@ -594,7 +636,6 @@ form {
   animation: fadeIn 0.6s;
   box-shadow: 0px 0px 40px rgba(255, 255, 255, 0.5);
 }
-
 .flex {
   display: flex;
 }
@@ -683,7 +724,7 @@ form {
 .edit__icon {
   width: 30px;
   height: 30px;
-  fill: rgb(118, 118, 118);
+  fill: #767676;
   transition: ease 0.3s;
 }
 .edit__icon:hover {

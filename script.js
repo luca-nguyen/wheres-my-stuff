@@ -25,9 +25,14 @@ class App {
     this.deleteBtn = document.querySelector(".delete__btn");
     this.logoContainer = document.querySelector(".logo__container");
     this.editBtn = document.querySelector(".edit__btn");
-    this.bookmarksContainer = document.querySelector('.bookmarks__container');
-    this.bookmarksDisplay = document.querySelector('.bookmarks__display');
-    this.mark = document.querySelector('.mark');
+    this.bookmarksContainer = document.querySelector(".bookmarks__container");
+    this.bookmarksDisplay = document.querySelector(".bookmarks__display");
+    this.bookmarksIcon = document.querySelector(".bookmarks__icon");
+    this.bookmarkBtn = document.querySelector(".bookmark__btn");
+    this.mark = document.querySelector(".mark");
+    this.bookmarkIconFilled = document.querySelector(
+      ".bookmarks__icon--filled"
+    );
 
     this.currInformationDisplay;
     this.currIconPicked = null;
@@ -40,7 +45,7 @@ class App {
   }
 
   initEventListeners() {
-    this.mark.addEventListener('mouseover', () => this.displayBookmarks());
+    this.mark.addEventListener("mouseover", () => this.displayBookmarks());
     this.searchBtn.addEventListener("click", (e) => this.searchItems(e));
     this.addItem.addEventListener("click", () => {
       this.clearFormInput();
@@ -65,7 +70,27 @@ class App {
 
     this.newItemForm.addEventListener("submit", (e) => e.preventDefault());
     document.addEventListener("keydown", (e) => this.escapeWindow(e));
+
     this.itemList.addEventListener("click", (e) => this.renderInformation(e));
+    // ! TODO
+    this.itemInformation.addEventListener("click", (e) => {
+      const btn = e.target.closest(".bookmark__btn");
+      if (!btn) return;
+      const bookmark = e.target.closest(".bookmark");
+      console.log(window.getComputedStyle(bookmark).opacity);
+
+      const name = this.currInformationDisplay.name;
+      const target = this.currItems.find((item) => item.name === name);
+      this.renderBookmarkItem(target);
+    });
+    // this.bookmarkBtn.addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   console.log("hi");
+    // });
+
+    this.bookmarksDisplay.addEventListener("click", (e) =>
+      this.renderInformation(e)
+    );
     this.doneBtn.addEventListener("click", (e) => this.handleFormSubmit(e));
     // this.resetBtn.addEventListener('click', this.resetItems());
     window.addEventListener("load", () => this.loadItemsFromStorage());
@@ -94,8 +119,12 @@ class App {
       }
     });
     this.itemInformation.addEventListener("click", (e) => this.editItem(e));
-    this.bookmarksContainer.addEventListener('mouseenter', () => this.displayBookmarks());
-    this.bookmarksDisplay.addEventListener('mouseleave', () => this.hideBookmarks());
+    this.bookmarksContainer.addEventListener("mouseenter", () =>
+      this.displayBookmarks()
+    );
+    this.bookmarksDisplay.addEventListener("mouseleave", () =>
+      this.hideBookmarks()
+    );
   }
 
   // displayBookmarks() {
@@ -107,28 +136,27 @@ class App {
   //    this.bookmarksDisplay.classList.remove("flex");
   //     this.bookmarksDisplay.classList.add("hidden");
   //   }, 1000); // Duration matches the fadeOut animation time (0.3s)
-  //   // this.bookmarksDisplay.classList.add("hidden"); 
+  //   // this.bookmarksDisplay.classList.add("hidden");
   // }
 
   setupBookmarksStyles() {
     // Add these styles to your bookmarks display element
-    this.bookmarksDisplay.classList.add('hidden');
-    this.bookmarksDisplay.style.transition = 'opacity 0.3s ease-out';
-    this.bookmarksDisplay.style.opacity = '0';
-    this.bookmarksDisplay.style.pointerEvents = 'none';
+    this.bookmarksDisplay.classList.add("hidden");
+    this.bookmarksDisplay.style.transition = "opacity 0.3s ease-out";
+    this.bookmarksDisplay.style.opacity = "0";
+    this.bookmarksDisplay.style.pointerEvents = "none";
   }
 
   displayBookmarks() {
-    this.bookmarksDisplay.style.opacity = '1';
-    this.bookmarksDisplay.classList.add('flex');
-    this.bookmarksDisplay.style.pointerEvents = 'auto';
+    this.bookmarksDisplay.style.opacity = "1";
+    this.bookmarksDisplay.classList.add("flex");
+    this.bookmarksDisplay.style.pointerEvents = "auto";
   }
 
   hideBookmarks() {
-    this.bookmarksDisplay.style.opacity = '0';
-    
-    this.bookmarksDisplay.style.pointerEvents = 'none';
+    this.bookmarksDisplay.style.opacity = "0";
 
+    this.bookmarksDisplay.style.pointerEvents = "none";
   }
 
   editItem(e) {
@@ -143,7 +171,7 @@ class App {
     this.showForm();
     this.currIconPicked = this.currInformationDisplay.url
       .slice(0, -6)
-      .concat('FFFFFF');
+      .concat("FFFFFF");
     this.doneBtn.addEventListener("click", () => {
       console.log("hi");
 
@@ -157,7 +185,7 @@ class App {
       const iconEdit = this.currInformationDisplay.url.slice(0, -6);
       const white = "FFFFFF";
       const url = iconEdit.concat(white);
-      
+
       // Deleting original item
       this.currItems = this.currItems.filter(
         (item) =>
@@ -230,7 +258,7 @@ class App {
   // Rendering item information
   renderInformation(e) {
     const res = e.target.closest(".item");
-    // console.log(res);
+    console.log(res);
     if (!res) return;
     const name = res.querySelector(".item__name").textContent;
     const location = res.querySelector(".item__location").textContent;
@@ -284,7 +312,10 @@ class App {
                                         <button class="edit__btn">
             <svg class="edit__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24";transform: ;msFilter:;"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>
           </button>
-        </div>
+          <div class="bookmark__btn">
+            <div class="bookmark bookmarks__icon--outline"></div>
+            <div class="bookmark bookmarks__icon--filled mark"></div>
+          </div>
         `;
 
     this.itemInformation.insertAdjacentHTML("afterbegin", html);
@@ -441,6 +472,16 @@ class App {
           </button>
         </div>`;
     this.itemList.insertAdjacentHTML("afterbegin", html);
+  }
+  renderBookmarkItem(item) {
+    const html = `<div class="item">
+    <img class="item__icon"
+            src="${item.icon}"/>
+          <p class="item__name">${item.name}</p>
+          <p class="item__location">${item.location}</p>
+          <p class="item__notes hidden">${item.notes}</p>
+        </div>`;
+    this.bookmarksDisplay.insertAdjacentHTML("afterbegin", html);
   }
 
   toggleEmojiContainer() {

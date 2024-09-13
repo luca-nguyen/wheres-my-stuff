@@ -44,6 +44,11 @@ class App {
     this.currBookmarked = [];
     this.isBookmarked = false;
 
+    // FIX
+    this.imageUpload = document.getElementById('imageUpload');
+    this.imageContainer = document.createElement('div');
+    this.itemInformation.appendChild(this.imageContainer);
+
     // Binding event listeners to class
     this.initEventListeners();
     this.setupBookmarksStyles();
@@ -64,6 +69,8 @@ class App {
       this.handleEmojiPickerClick(e)
     );
 
+    this.imageUpload.addEventListener('change', (event) => this.handleImageUpload(event));
+
     // Handle Enter key on nameInput
     this.nameInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -71,6 +78,7 @@ class App {
         // Trigger the emoji picker when Enter is pressed
         this.handleEmojiPickerClick(e);
       }
+      
     });
 
     this.newItemForm.addEventListener("submit", (e) => e.preventDefault());
@@ -167,6 +175,48 @@ class App {
       this.hideBookmarks()
     );
   }
+
+
+// FIX
+  handleImageUpload(event) {
+    // save to global???
+    const file = event.target.files[0];
+    
+    if (file) {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.classList.add('uploaded-image'); // Add a class for styling
+        
+        img.onload = () => {
+          // Update the current information display
+          if (this.currInformationDisplay) {
+            this.currInformationDisplay.imageUrl = e.target.result;
+            this.saveInformationToStorage();
+            this.displayInformation(this.currInformationDisplay);
+          } else {
+            // If no item is selected, create a new one
+            const newItem = {
+              id: Date.now(),
+              name: 'Uploaded Image',
+              location: 'Image Upload',
+              notes: 'This is an uploaded image.',
+              imageUrl: e.target.result
+            };
+            this.currItems.push(newItem);
+            this.saveItemsToStorage();
+            this.displayInformation(newItem);
+          }
+        }
+      }
+      
+      reader.readAsDataURL(file);
+    }
+  }
+
+
 
   // displayBookmarks() {
   //   this.bookmarksDisplay.classList.remove('hidden');
@@ -356,40 +406,47 @@ class App {
     //       <p>${notes.textContent}</p>
     //     </div>`;
     // this.itemInformation.insertAdjacentHTML("afterbegin", html);
-  }
+  } 
 
+
+  // FIX
   displayInformation(item) {
     const isBookmarked = this.currBookmarked.some(
       (bookmark) => bookmark.name === item.name
     );
-    const html = `<div class="item__information--title">
-            <h2>${item.name}</h2>
-            <img
-            class="item__icon"
-            src=${item.url}
-            />
+    let imageHtml = '';
+    if (item.imageUrl) {
+      imageHtml = `<img class="uploaded-image" src="${item.imageUrl}" alt="${item.name}">`;
+    }
 
-          </div>
-          <p class="location">${item.location}</p>
-          <p>${item.notes}</p>
-                                        <button class="edit__btn">
-            <svg class="edit__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24";transform: ;msFilter:;"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>
-          </button>
-          ${
-            isBookmarked
-              ? `<div class="bookmark__solid"></div>`
-              : `<div class="bookmark__btn">
+    const html = `
+      <div class="item__information--title">
+        <h2>${item.name}</h2>
+        <img class="item__icon" src="${item.icon || 'https://api.iconify.design/lucide/smile.svg'}"/>
+      </div>
+      <p class="location">${item.location}</p>
+      <p>${item.notes}</p>
+      ${imageHtml}
+      <button class="edit__btn">
+        <svg class="edit__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>
+      </button>
+      ${isBookmarked
+        ? `<div class="bookmark__solid"></div>`
+        : `<div class="bookmark__btn">
             <div class="bookmark bookmarks__icon--outline"></div>
             <div class="bookmark bookmarks__icon--filled mark"></div>
           </div>`
-          }
-        `;
+      }
+    `;
 
-    this.itemInformation.insertAdjacentHTML("afterbegin", html);
+    this.itemInformation.innerHTML = html;
 
-    // Need to reset to 'left' alignment each time
-    this.itemInformation.style.textAlign = "left";
-    if (item.notes.length < 70) this.itemInformation.style.textAlign = "center";
+    // Adjust text alignment based on notes length
+    this.itemInformation.style.textAlign = item.notes.length < 70 ? "center" : "left";
+  }
+
+  saveInformationToStorage() {
+    localStorage.setItem("information", JSON.stringify(this.currInformationDisplay));
   }
 
   renderIcons(currIcons) {

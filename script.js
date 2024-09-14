@@ -37,6 +37,7 @@ class App {
       ".bookmarks__icon--outline"
     );
 
+    // Current state trackers
     this.currInformationDisplay;
     this.currIconPicked = null;
     this.currIcons = [];
@@ -44,12 +45,6 @@ class App {
     this.currBookmarked = [];
     this.isBookmarked = false;
 
-    // FIX
-    this.imageUpload = document.getElementById('imageUpload');
-    this.imageContainer = document.createElement('div');
-    this.itemInformation.appendChild(this.imageContainer);
-
-    // Binding event listeners to class
     this.initEventListeners();
     this.setupBookmarksStyles();
   }
@@ -57,10 +52,7 @@ class App {
   initEventListeners() {
     this.mark.addEventListener("mouseover", () => this.displayBookmarks());
     this.searchBtn.addEventListener("click", (e) => this.searchItems(e));
-    this.addItem.addEventListener("click", () => {
-      this.clearFormInput();
-      this.showForm();
-    });
+    this.addItem.addEventListener("click", () => this.handleAddItem());
     this.closeFormBtn.addEventListener("click", () => this.hideForm());
     this.closeEmojiBtn.addEventListener("click", () =>
       this.toggleEmojiContainer()
@@ -68,105 +60,33 @@ class App {
     this.emojiPicker.addEventListener("click", (e) =>
       this.handleEmojiPickerClick(e)
     );
-
-    this.imageUpload.addEventListener('change', (event) => this.handleImageUpload(event));
-
-    // Handle Enter key on nameInput
-    this.nameInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        // Trigger the emoji picker when Enter is pressed
-        this.handleEmojiPickerClick(e);
-      }
-      
-    });
-
+    this.nameInput.addEventListener("keydown", (e) =>
+      this.handleNameInputEnter(e)
+    );
     this.newItemForm.addEventListener("submit", (e) => e.preventDefault());
     document.addEventListener("keydown", (e) => this.escapeWindow(e));
-
     this.itemList.addEventListener("click", (e) => this.renderInformation(e));
-
-    // Bookmark Item
-    this.itemInformation.addEventListener("click", (e) => {
-      const btn = e.target.closest(".bookmark__btn");
-      const solid = e.target.closest(".bookmark__solid");
-      console.log(solid);
-
-      // Creating a new bookmark
-      if (!solid && btn) {
-        btn.classList.add("hidden");
-        const html = `<div class="bookmark__solid"></div>`;
-        this.itemInformation.insertAdjacentHTML("beforeend", html);
-        const target = this.currItems.find(
-          (item) => item.name === this.currInformationDisplay.name
-        );
-        console.log("Target:");
-        console.log(target);
-        // ???
-        if (this.currBookmarked.includes(target)) return;
-        this.currBookmarked.push(target);
-        this.saveBookmarksToStorage();
-      } else if (solid) {
-        // Deleting a bookmark
-        const html = `<div class="bookmark__btn">
-            <div class="bookmark bookmarks__icon--outline"></div>
-            <div class="bookmark bookmarks__icon--filled mark"></div>
-          </div>`;
-        const target = this.currItems.find(
-          (item) => item.name === this.currInformationDisplay.name
-        );
-        this.currBookmarked = this.currBookmarked.filter(
-          (item) => item.name !== target.name
-        );
-        this.saveBookmarksToStorage();
-        this.itemInformation.insertAdjacentHTML("beforeend", html);
-        solid.remove();
-
-        // Remove the unbookmarked item from the bookmarks display
-        this.removeBookmarkFromDisplay(target.name);
-      }
-      if (!btn) return;
-      const name = this.currInformationDisplay.name;
-      const target = this.currItems.find((item) => item.name === name);
-      this.renderBookmarkItem(target);
-    });
-    // this.bookmarkBtn.addEventListener("click", (e) => {
-    //   e.preventDefault();
-    //   console.log("hi");
-    // });
-
+    this.itemInformation.addEventListener("click", (e) =>
+      this.handleAddBookmark(e)
+    );
     this.bookmarksDisplay.addEventListener("click", (e) =>
       this.renderInformation(e)
     );
     this.doneBtn.addEventListener("click", (e) => this.handleFormSubmit(e));
-    // this.resetBtn.addEventListener('click', this.resetItems());
     window.addEventListener("load", () => this.loadCurrBookmarksFromStorage());
     window.addEventListener("load", () => this.loadItemsFromStorage());
     window.addEventListener("load", () => this.loadInformationFromStorage());
     window.addEventListener("load", () => this.loadCurrIconFromStorage());
-
     this.resetBtn.addEventListener("click", () => this.resetItems());
     this.itemList.addEventListener("click", (e) => this.deleteItem(e));
     this.logoContainer.addEventListener("click", (e) => this.logoClick(e));
-    this.searchbar.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        this.searchItems(e);
-      }
-    });
-    this.searchbar.addEventListener("input", (e) => {
-      if (this.searchbar.value === "") {
-        sessionStorage.setItem("shouldFocusSearchbar", "true"); // Set a flag to focus the search bar after reload
-        window.location.reload();
-      }
-    });
-    // After reload
-    window.addEventListener("load", () => {
-      if (sessionStorage.getItem("shouldFocusSearchbar") === "true") {
-        this.searchbar.focus(); // Focus the search bar after page reload
-        sessionStorage.removeItem("shouldFocusSearchbar"); // Clean up the flag
-      }
-    });
+    this.searchbar.addEventListener("keydown", (e) =>
+      this.handleSearchbarEnter(e)
+    );
+    this.searchbar.addEventListener("input", (e) =>
+      this.searchbarFocusStore(e)
+    );
+    window.addEventListener("load", () => this.searchbarFocus());
     this.itemInformation.addEventListener("click", (e) => this.editItem(e));
     this.bookmarksContainer.addEventListener("mouseenter", () =>
       this.displayBookmarks()
@@ -176,59 +96,89 @@ class App {
     );
   }
 
-
-// FIX
-  handleImageUpload(event) {
-    // save to global???
-    const file = event.target.files[0];
-    
-    if (file) {
-      const reader = new FileReader();
-      
-      reader.onload = (e) => {
-        const img = new Image();
-        img.src = e.target.result;
-        img.classList.add('uploaded-image'); // Add a class for styling
-        
-        img.onload = () => {
-          // Update the current information display
-          if (this.currInformationDisplay) {
-            this.currInformationDisplay.imageUrl = e.target.result;
-            this.saveInformationToStorage();
-            this.displayInformation(this.currInformationDisplay);
-          } else {
-            // If no item is selected, create a new one
-            const newItem = {
-              id: Date.now(),
-              name: 'Uploaded Image',
-              location: 'Image Upload',
-              notes: 'This is an uploaded image.',
-              imageUrl: e.target.result
-            };
-            this.currItems.push(newItem);
-            this.saveItemsToStorage();
-            this.displayInformation(newItem);
-          }
-        }
-      }
-      
-      reader.readAsDataURL(file);
+  searchbarFocus() {
+    // Focus the search bar after page reload
+    // Clean up the flag
+    if (sessionStorage.getItem("shouldFocusSearchbar") === "true") {
+      this.searchbar.focus();
+      sessionStorage.removeItem("shouldFocusSearchbar");
     }
   }
 
+  searchbarFocusStore(e) {
+    // Set a flag to focus the search bar after reload
+    if (this.searchbar.value === "") {
+      sessionStorage.setItem("shouldFocusSearchbar", "true");
+      window.location.reload();
+    }
+  }
 
+  handleSearchbarEnter(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      this.searchItems(e);
+    }
+  }
 
-  // displayBookmarks() {
-  //   this.bookmarksDisplay.classList.remove('hidden');
-  //   this.bookmarksDisplay.classList.add('flex');
-  // }
-  // hideBookmarks() {
-  //   setTimeout(() => {
-  //    this.bookmarksDisplay.classList.remove("flex");
-  //     this.bookmarksDisplay.classList.add("hidden");
-  //   }, 1000); // Duration matches the fadeOut animation time (0.3s)
-  //   // this.bookmarksDisplay.classList.add("hidden");
-  // }
+  handleAddBookmark(e) {
+    const btn = e.target.closest(".bookmark__btn");
+    const solid = e.target.closest(".bookmark__solid");
+    console.log(solid);
+
+    // Creating a new bookmark
+    if (!solid && btn) {
+      btn.classList.add("hidden");
+      this.bookmarksDisplay.innerHTML = "";
+      const html = `<div class="bookmark__solid"></div>`;
+      this.itemInformation.insertAdjacentHTML("beforeend", html);
+      const target = this.currItems.find(
+        (item) => item.name === this.currInformationDisplay.name
+      );
+      console.log("Target:");
+      console.log(target);
+      // ???
+      if (this.currBookmarked.includes(target)) return;
+      this.currBookmarked.push(target);
+      this.saveBookmarksToStorage();
+    } else if (solid) {
+      // Deleting a bookmark
+      const html = `<div class="bookmark__btn">
+            <div class="bookmark bookmarks__icon--outline"></div>
+            <div class="bookmark bookmarks__icon--filled mark"></div>
+          </div>`;
+      const target = this.currItems.find(
+        (item) => item.name === this.currInformationDisplay.name
+      );
+      this.currBookmarked = this.currBookmarked.filter(
+        (item) => item.name !== target.name
+      );
+      this.saveBookmarksToStorage();
+      this.itemInformation.insertAdjacentHTML("beforeend", html);
+      solid.remove();
+
+      // Remove the unbookmarked item from the bookmarks display
+      this.removeBookmarkFromDisplay(target.name);
+      this.emptyBookmarkDisplay();
+    }
+    if (!btn) return;
+    const name = this.currInformationDisplay.name;
+    const target = this.currItems.find((item) => item.name === name);
+    this.renderBookmarkItem(target);
+  }
+
+  handleNameInputEnter(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      // Trigger the emoji picker when Enter is pressed
+      this.handleEmojiPickerClick(e);
+    }
+  }
+
+  handleAddItem() {
+    this.clearFormInput();
+    this.showForm();
+  }
+
   removeBookmarkFromDisplay(itemName) {
     const bookmarkItems = this.bookmarksDisplay.querySelectorAll(".item");
     bookmarkItems.forEach((item) => {
@@ -304,12 +254,15 @@ class App {
     e.preventDefault();
     // Emptying display
     this.currInformationDisplay = "";
+    this.setCurrInformationDisplayToLocalStorage();
+    window.location.reload();
+  }
+
+  setCurrInformationDisplayToLocalStorage() {
     localStorage.setItem(
-      // Duplicate code
       "information",
       JSON.stringify(this.currInformationDisplay)
     );
-    window.location.reload();
   }
 
   // Deleting item (also removes from local storage)
@@ -319,20 +272,12 @@ class App {
     const name = item.querySelector(".item__name");
     const btn = e.target.closest(".delete__btn");
     if (!btn) return;
-
     this.currItems = this.currItems.filter(
       (item) => item.name != name.textContent
     );
     console.log(this.currItems);
-
-    // Emptying display
     this.currInformationDisplay = "";
-    localStorage.setItem(
-      // Duplicate code
-      "information",
-      JSON.stringify(this.currInformationDisplay)
-    );
-
+    this.setCurrInformationDisplayToLocalStorage();
     this.saveItemsToStorage();
     window.location.reload();
   }
@@ -406,47 +351,40 @@ class App {
     //       <p>${notes.textContent}</p>
     //     </div>`;
     // this.itemInformation.insertAdjacentHTML("afterbegin", html);
-  } 
+  }
 
-
-  // FIX
   displayInformation(item) {
     const isBookmarked = this.currBookmarked.some(
       (bookmark) => bookmark.name === item.name
     );
-    let imageHtml = '';
-    if (item.imageUrl) {
-      imageHtml = `<img class="uploaded-image" src="${item.imageUrl}" alt="${item.name}">`;
-    }
+    const html = `<div class="item__information--title">
+            <h2>${item.name}</h2>
+            <img
+            class="item__icon"
+            src=${item.url}
+            />
 
-    const html = `
-      <div class="item__information--title">
-        <h2>${item.name}</h2>
-        <img class="item__icon" src="${item.icon || 'https://api.iconify.design/lucide/smile.svg'}"/>
-      </div>
-      <p class="location">${item.location}</p>
-      <p>${item.notes}</p>
-      ${imageHtml}
-      <button class="edit__btn">
-        <svg class="edit__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>
-      </button>
-      ${isBookmarked
-        ? `<div class="bookmark__solid"></div>`
-        : `<div class="bookmark__btn">
+          </div>
+          <p class="location">${item.location}</p>
+          <p>${item.notes}</p>
+                                        <button class="edit__btn">
+            <svg class="edit__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24";transform: ;msFilter:;"><path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path><path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path></svg>
+          </button>
+          ${
+            isBookmarked
+              ? `<div class="bookmark__solid"></div>`
+              : `<div class="bookmark__btn">
             <div class="bookmark bookmarks__icon--outline"></div>
             <div class="bookmark bookmarks__icon--filled mark"></div>
           </div>`
-      }
-    `;
+          }
+        `;
 
-    this.itemInformation.innerHTML = html;
+    this.itemInformation.insertAdjacentHTML("afterbegin", html);
 
-    // Adjust text alignment based on notes length
-    this.itemInformation.style.textAlign = item.notes.length < 70 ? "center" : "left";
-  }
-
-  saveInformationToStorage() {
-    localStorage.setItem("information", JSON.stringify(this.currInformationDisplay));
+    // Need to reset to 'left' alignment each time
+    this.itemInformation.style.textAlign = "left";
+    if (item.notes.length < 70) this.itemInformation.style.textAlign = "center";
   }
 
   renderIcons(currIcons) {
@@ -669,8 +607,6 @@ class App {
         this.itemInformation.insertAdjacentHTML("beforeend", html);
         return;
       }
-      console.log(this.currInformationDisplay);
-      console.log(this.currBookmarked);
       this.displayInformation(this.currInformationDisplay);
     }
   }
@@ -679,9 +615,23 @@ class App {
     const savedBookmarks = localStorage.getItem("bookmarks");
     if (savedBookmarks) {
       this.currBookmarked = JSON.parse(savedBookmarks);
+
+      this.emptyBookmarkDisplay();
+
       this.currBookmarked.forEach((item) => this.renderBookmarkItem(item));
     } else {
       this.currBookmarked = [];
+    }
+  }
+
+  emptyBookmarkDisplay() {
+    // Empty bookmarks
+    if (this.currBookmarked.length === 0) {
+      const html = `<div class="empty__bookmarks">
+            <p>No bookmarked items!</p>
+          </div>`;
+      this.bookmarksDisplay.insertAdjacentHTML("beforeend", html);
+      return;
     }
   }
 

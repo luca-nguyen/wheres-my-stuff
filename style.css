@@ -576,7 +576,7 @@ form {
   position: absolute;
   transition: opacity 0.3s ease;
   left: 60px;
-  top: 35px;  
+  top: 35px;
 }
 .bookmark__btn .bookmarks__icon--outline,
 .bookmark__btn .bookmarks__icon--filled {
@@ -592,7 +592,7 @@ form {
   opacity: 1;
 }
 .bookmark__btn .bookmarks__icon--filled {
-  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");                                            
+  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");
   opacity: 0;
 }
 .bookmark__btn:hover .bookmarks__icon--outline {
@@ -605,10 +605,9 @@ form {
 }
 .bookmark__marked {
   background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");
-  opacity: 1; 
+  opacity: 1;
 }
 .bookmark__solid {
-
   width: 35px;
   height: 35px;
   background-repeat: no-repeat;
@@ -617,8 +616,8 @@ form {
   align-self: center;
   position: absolute;
   left: 60px;
-  top: 35px;   
-  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF"); 
+  top: 35px;
+  background-image: url("https://api.iconify.design/material-symbols/bookmark.svg?color=%FFFFFF");
 }
 .bookmark__solid:hover {
   cursor: pointer;
@@ -656,8 +655,6 @@ form {
 .flex {
   display: flex;
 }
-
-
 
 /* Reset Button */
 .reset__btn {
@@ -728,7 +725,7 @@ form {
   justify-content: center;
 }
 .empty__bookmarks {
-  color: rgb(88, 88, 88);  
+  color: rgb(88, 88, 88);
 }
 
 /* Edit */
@@ -753,9 +750,6 @@ form {
   cursor: pointer;
 }
 
-
-
-
 @keyframes fadeOut {
   0% {
     opacity: 1;
@@ -768,8 +762,6 @@ form {
   animation: fadeOut 0.3s forwards; /* 'forwards' ensures it stays at opacity 0 */
 }
 
-
-
 /* Responsiveness */
 
 @media (max-width: 93em) {
@@ -779,13 +771,19 @@ form {
   .item {
     width: 300px;
   }
+  .notes__input {
+    width: 300px;
+  }
 }
 @media (max-width: 80em) {
   .container {
     max-width: 1000px;
   }
+  .notes__input {
+    width: 250px;
+  }
   .item {
-    width: 250px;   
+    width: 250px;
   }
   /* .item__name {
     font-size: 14px;
@@ -814,13 +812,41 @@ form {
   }
 }
 
-
 @media (max-width: 67em) {
   .container {
     max-width: 800px;
   }
+  .notes__input {
+    width: 200px;
+  }
+  .name__input--container,
+  .location__input--container {
+    margin-left: 20px;
+  }
+  .floor__select--container {
+    gap: 20px;
+  }
+  .name__input--bar,
+  .location__input--bar {
+    width: 60%; /* Adjust this percentage as needed */
+    max-width: 200px; /* Set a maximum width if desired */
+    margin-left: 10px;
+  }
+
+  .name__input,
+  .location__input {
+    width: 100%; /* Make the input fill the bar */
+    font-size: 14px; /* Optionally reduce font size */
+  }
+
+  /* If you have icons within these bars, you might need to adjust their position */
+  .name__icon--container,
+  .location__icon--container {
+    right: 5px; /* Adjust as needed */
+  }
+
   .item {
-    width: 200px;   
+    width: 200px;
   }
   /* .item__name {
     font-size: 14px;
@@ -866,8 +892,42 @@ form {
   .container {
     max-width: 600px;
   }
+
+  form {
+    width: 500px;
+    left: 50px;
+  }
+  .notes__input {
+    width: 150px;
+  }
+  .name__input--container,
+  .location__input--container {
+    margin-left: 20px;
+  }
+  .floor__select--container {
+    gap: 20px;
+  }
+  .name__input--bar,
+  .location__input--bar {
+    width: 60%; /* Adjust this percentage as needed */
+    max-width: 200px; /* Set a maximum width if desired */
+    margin-left: 10px;
+  }
+
+  .name__input,
+  .location__input {
+    width: 100%; /* Make the input fill the bar */
+    font-size: 14px; /* Optionally reduce font size */
+  }
+
+  /* If you have icons within these bars, you might need to adjust their position */
+  .name__icon--container,
+  .location__icon--container {
+    right: 5px; /* Adjust as needed */
+  }
+
   .item {
-    width: 150px;   
+    width: 150px;
   }
   .item__name {
     font-size: 14px;
@@ -912,7 +972,6 @@ form {
   }
   .bookmarks__container p {
     display: none;
-    
   }
   .bookmarks__container {
     margin-left: 80px;
@@ -923,14 +982,56 @@ form {
   .author {
     display: none;
   }
+  .bar::placeholder {
+    color: transparent;
+    font-size: 0;
+  }
+  .bookmark__btn, .bookmark__solid {
+    left: 30px;
+    top: 30px;
+  }
 }
 
 @media (max-width: 40em) {
   .container {
     max-width: 380px;
+    grid-template-columns: 1fr 3.5fr;
+  }
+  form {
+    width: 400px;
+    left: -10px;
+  }
+  .notes__input {
+    width: 150px;
+  }
+  .name__input--container,
+  .location__input--container {
+    margin-left: 20px;
+  }
+  .floor__select--container {
+    gap: 20px;
+    margin-left: 10px;
+  }
+  .name__input--bar,
+  .location__input--bar {
+    width: 60%; /* Adjust this percentage as needed */
+    max-width: 200px; /* Set a maximum width if desired */
+    margin-left: 10px;
+  }
+
+  .name__input,
+  .location__input {
+    width: 100%; /* Make the input fill the bar */
+    font-size: 14px; /* Optionally reduce font size */
+  }
+
+  /* If you have icons within these bars, you might need to adjust their position */
+  .name__icon--container,
+  .location__icon--container {
+    right: 5px; /* Adjust as needed */
   }
   .item {
-    width: 80px;   
+    width: 60px;
   }
   .item__name {
     display: none;
@@ -939,8 +1040,8 @@ form {
     display: none;
   }
   .item__icon {
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     margin-left: 15px;
   }
   .delete__icon {
@@ -952,8 +1053,9 @@ form {
     top: 7px;
   }
   .item__information {
-    width: 220px;
-    padding-bottom: 10px;
+    width: 280px;
+    height: 400px;
+    padding-bottom: 40px;
   }
   .header {
     gap: 20px;
@@ -972,14 +1074,15 @@ form {
     width: 150px;
   }
   .item__display {
-    gap: 40px;
+    gap: 0px;
+    margin-bottom: 0px;
+    height: 100%;
   }
   h1 {
     padding: 20px 0px;
   }
   .bookmarks__container p {
     display: none;
-    
   }
   .bookmarks__container {
     margin-right: 0px;
@@ -999,10 +1102,12 @@ form {
     margin-left: 20px;
   }
   .btn__create {
-    padding: 20px 15px;
+    font-size: 12px;
+    padding: 20px 10px;
+    margin-left: 10px;
   }
   .btn__create:hover {
-    padding: 20px 15px;
+    padding: 20px 10px;
   }
   .item__information p {
     /* height: 100px; */
@@ -1013,11 +1118,34 @@ form {
     right: 10px;
     top: 10px;
   }
-  .bookmark__btn {
+  .bookmark__btn, .bookmark__solid {
     left: 10px;
     top: 10px;
   }
   .item__information--title {
     gap: 0px;
+  }
+  .item__list {
+    height: 500px;
+  }
+  /* .container {
+    max-width: 1400px;
+    height: 800px;
+    margin: 50px auto;
+    display: grid;
+    background-color: white;
+    grid-template-columns: 1fr 2.2fr;
+    grid-template-rows: 1fr 4fr 1fr;
+    border-radius: 25px;
+    box-shadow: 0px 0px 40px rgb(116, 116, 116);
+    position: relative;
+  } */
+  .reset__btn {
+    right: 20px;
+    bottom: 40px;
+  }
+  .bar::placeholder {
+    color: transparent;
+    font-size: 0;
   }
 }

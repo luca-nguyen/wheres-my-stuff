@@ -127,8 +127,10 @@ class App {
 
     // Creating a new bookmark
     if (!solid && btn) {
+      const empty = document.querySelector('.empty__bookmarks');
+      if (empty) this.bookmarksDisplay.innerHTML = '';
+
       btn.classList.add("hidden");
-      this.bookmarksDisplay.innerHTML = "";
       const html = `<div class="bookmark__solid"></div>`;
       this.itemInformation.insertAdjacentHTML("beforeend", html);
       const target = this.currItems.find(
@@ -626,7 +628,9 @@ class App {
 
   emptyBookmarkDisplay() {
     // Empty bookmarks
+    console.log(this.currBookmarked);
     if (this.currBookmarked.length === 0) {
+      this.bookmarksDisplay.innerHTML = '';
       const html = `<div class="empty__bookmarks">
             <p>No bookmarked items!</p>
           </div>`;

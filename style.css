@@ -282,6 +282,7 @@ form {
   justify-self: center;
 }
 .name__input--container {
+  
   align-self: end;
   justify-self: center;
   display: flex;
@@ -327,6 +328,7 @@ form {
 }
 .name__input,
 .location__input {
+  font-size: 18px;
   border-radius: 24px;
   padding: 10px 0px;
   border: none;
@@ -359,6 +361,7 @@ form {
   height: 20px;
 }
 .notes__input {
+  font-size: 18px;
   width: 350px;
   height: 200px;
   overflow-y: scroll;

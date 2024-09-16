@@ -188,6 +188,7 @@ body {
   align-self: center;
   justify-self: center;
   position: relative;
+  padding-bottom: 10px;
 }
 
 .img__container {
@@ -512,6 +513,7 @@ form {
 }
 .item__information p {
   padding: 0px 35px;
+  padding-bottom: 30px;
 }
 .item__information--title {
   display: flex;
@@ -764,7 +766,7 @@ form {
 
 /* Responsiveness */
 
-@media (max-width: 93em) {
+/* @media (max-width: 90em) {
   .container {
     max-width: 1200px;
   }
@@ -774,7 +776,7 @@ form {
   .notes__input {
     width: 300px;
   }
-}
+} */
 @media (max-width: 80em) {
   .container {
     max-width: 1000px;
@@ -864,8 +866,12 @@ form {
     width: 20px;
     height: 20px;
   }
+  .item__information P {
+    overflow-y: scroll;
+  }
   .item__information {
     width: 400px;
+    padding-bottom: 30px;
   }
   .header {
     gap: 40px;
@@ -885,6 +891,13 @@ form {
   }
   .item__display {
     gap: 50px;
+  }
+  h1 {
+    padding: 20px 100px;
+  }
+  .bookmark__btn, .bookmark__solid {
+    left: 30px;
+    top: 30px;
   }
 }
 
@@ -947,6 +960,10 @@ form {
   }
   .item__information {
     width: 350px;
+    padding-bottom: 30px;
+  }
+  .item__information p {
+    overflow-y: scroll;
   }
   .header {
     gap: 20px;
@@ -1080,6 +1097,7 @@ form {
   }
   h1 {
     padding: 20px 0px;
+    font-size: 30px;
   }
   .bookmarks__container p {
     display: none;
@@ -1147,5 +1165,8 @@ form {
   .bar::placeholder {
     color: transparent;
     font-size: 0;
+  }
+  .item__information p {
+    font-size: 16px;
   }
 }

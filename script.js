@@ -47,6 +47,7 @@ class App {
 
     this.initEventListeners();
     this.setupBookmarksStyles();
+    this.emptyBookmarkDisplay();
   }
 
   initEventListeners() {

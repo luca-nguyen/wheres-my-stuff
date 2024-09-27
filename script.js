@@ -78,6 +78,7 @@ class App {
     window.addEventListener("load", () => this.loadItemsFromStorage());
     window.addEventListener("load", () => this.loadInformationFromStorage());
     window.addEventListener("load", () => this.loadCurrIconFromStorage());
+    window.addEventListener("load", () => this.emptyBookmarkDisplay());
     this.resetBtn.addEventListener("click", () => this.resetItems());
     this.itemList.addEventListener("click", (e) => this.deleteItem(e));
     this.logoContainer.addEventListener("click", (e) => this.logoClick(e));

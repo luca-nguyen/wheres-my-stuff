@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/b1bbc515-0634-41e1-977f-1b0853a57073)# Where's My Stuff
+# Where's My Stuff
 Organisation app used to track the location of important items. Allows user to log items with detailed descriptions, record precise locations, organise with categories and tags, and find items using a powerful search tool.
 
 ![Screenshot of app](/images/wms_sample.png)

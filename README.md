@@ -1,7 +1,7 @@
-# Where's My Stuff
+![image](https://github.com/user-attachments/assets/b1bbc515-0634-41e1-977f-1b0853a57073)# Where's My Stuff
 Organisation app used to track the location of important items. Allows user to log items with detailed descriptions, record precise locations, organise with categories and tags, and find items using a powerful search tool.
 
-![Screenshot of app](wms_sample.png)
+![Screenshot of app](/images/wms_sample.png)
 
 ## Key features
 - Item tracking with location and description management
@@ -22,4 +22,20 @@ Organisation app used to track the location of important items. Allows user to l
 | **UI/UX Features**    | UI features smooth transitions and animations, modal forms with overlays, and dynamic content rendering. Loading spinners developed using async operations, while the responsive layout ensures usability across different screen sizes.        |
 
 ## How to use
+1. Click the "Add Item" button to open the input panel and enter item details like name, location, and additional notes.
 
+![Screenshot of app](/images/wms_add_2.png)
+
+2. Click the emoji icon to generate and select an icon related to the item's name.
+
+![Screenshot of app](/images/wms_api.png)
+
+3. Click the bookmark icon to save an entry, and access all bookmarks from the top-right corner.
+
+![Screenshot of app](/images/wms_bookmark.png)
+  
+5. Use the search bar to find items by typing a query (case insensitive), with results updating in real time.
+
+![Screenshot of app](/images/wms_search.png)
+  
+7. Use the cross icon next to each entry to delete a single entry. Otherwise, use the bottom-left red icon to reset the app entirely.

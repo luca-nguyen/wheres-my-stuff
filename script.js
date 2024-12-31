@@ -218,7 +218,6 @@ class App {
     const btn = e.target.closest(".edit__btn");
     if (!btn) return;
 
-    console.log("yay");
     this.nameInput.value = this.currInformationDisplay.name;
     this.locationInput.value = this.currInformationDisplay.location;
     this.notesInput.value = this.currInformationDisplay.notes;
@@ -227,7 +226,6 @@ class App {
       .slice(0, -6)
       .concat("FFFFFF");
     this.doneBtn.addEventListener("click", () => {
-      console.log("hi");
 
       this.handleFormSubmit(e);
       // console.log(this.currItems);

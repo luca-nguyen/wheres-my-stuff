@@ -1,5 +1,5 @@
 # Where's My Stuff
-Organisation app used to track the location of important items. Allows user to log items with detailed descriptions, record precise locations, organise with categories and tags, and find items using a powerful search tool.
+Organisation app used to track the location of important items. Allows user to log items with detailed descriptions, record precise locations, organise with categories and tags, and find items using a search tool.
 
 ![Screenshot of app](/images/wms_sample.png)
 
